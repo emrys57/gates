@@ -1,0 +1,145 @@
+/* 
+    Document   : localcss
+    Created on : 18-Sep-2013, 22:17:29
+    Author     : emryswilliams
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.mainDisplay {
+    font-family: Helvetica, "Nimbus Sans L", "Liberation Sans", Arial, sans-serif;
+    line-height: 1.5em;
+    background-color: rgba(249, 227, 204, 1);
+    border-radius: 0.6em;
+    margin: 1em;
+    padding: 1em;
+    width: 50em;
+    position: relative;
+}
+.parmTitle {
+    display: inline-block;
+    width: 12em;
+}
+
+.invalid {
+    background-color: rgba(255,0,0, 0.1);
+}
+
+.ib {
+    display: inline-block;
+}
+
+.column {
+    display: inline-block;
+    width: 6em;
+}
+
+.columnInput {
+    width: 5em;
+}
+
+.redAlert {
+    color: red;
+    font-weight: bold;
+    display: inline-block;
+}
+
+.development {
+    font-family: monospace;
+    margin: 2em;
+    padding: 2em;
+}
+.developmentBox {
+    border-radius: 0.5em;
+    padding: 0.3em 1em;
+    border: 1px solid rgba(0,0,0,0.2);
+    width: 20em;
+    margin: 1em 0em;
+}
+.smallButton:hover {
+    box-shadow: 0.2em 0.2em 0.3em cornflowerblue;
+}
+.smallButtonHover { /* for ZeroClipboard */
+ /*   color:#99ffff; */
+    box-shadow: 2px 2px 2px 0px #222;
+}
+/*
+.smallbutton:active {
+    box-shadow: 1px 1px 1px rgba(64, 64, 64, 0.50);
+}
+*/
+.smallButtonActive { /* for ZeroClipboard */
+    box-shadow: 1px 1px 1px rgba(64, 64, 64, 0.50);
+}
+.smallButtonDead {
+    color: #888888;
+    pointer-events: none;
+}
+.ePanel {
+    border-radius: 0.5em;
+    padding: 0.5em;
+    border: 1px solid rgba(0,0,0,0.2);
+    background-color: rgba(249, 227, 204, 1);
+    box-shadow: 0em 0em 1em grey;
+}
+
+.julianWarning {
+    color: rgba(128, 0, 0, 1);
+}
+
+.settings {
+    font-family: verdana;
+    font-size: 0.8em;
+}
+.editable {
+    margin: 0.5em;
+    width: 60em;
+    height: 4em;
+    padding: 0.5em;
+    border: 1px solid rgba(0,0,0,0.2);
+    background-color: #ccffff;
+}
+
+.drLabel {
+    text-align: right;
+    width: 5em;
+    padding: 0.5em;
+    display: inline-block;
+}
+.drValue {
+    padding: 0.3em;
+    display: inline-block;
+    border: 1px solid rgba(0,0,0,0); /* so it does not move when I hover */
+    border-radius: 0.5em;
+}
+.clipHover { /* applied to value during copying */
+    border: 1px solid rgba(0,0,0,0.2);
+}
+.clipActive {
+    border: 1px solid rgba(0,0,0,1);
+}
+.clipPing {
+    background-color: rgba(255, 140, 140, 0.2);
+}
+.copyButton {
+    position: relative;
+    bottom: 0.2em;
+    margin-left: 1em;
+    margin-right: 1em;
+}
+.displayNone {
+    display: none;
+}
+.greyed {
+    pointer-events: none;
+    cursor: default;
+    opacity: 0.6;
+}
+.lesser {
+    font-size: 0.8em;
+    opacity: 0.8;
+}

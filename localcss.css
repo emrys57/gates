@@ -35,11 +35,19 @@ root {
 
 .column {
     display: inline-block;
-    width: 6em;
+    width: 10em;
 }
 
 .columnInput {
     width: 5em;
+}
+.columnOutput {
+    width: 5em;
+}
+
+.comment {
+    font-size: 0.8em;
+    opacity: 0.8;
 }
 
 .redAlert {
@@ -142,4 +150,7 @@ root {
 .lesser {
     font-size: 0.8em;
     opacity: 0.8;
+}
+.fright {
+    float: right;
 }

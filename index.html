@@ -1,211 +1,45 @@
-<!--
-To change this template, choose Tools | Templates
-and open the template in the editor.
--->
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Birthdate</title>
+        <title>Rising Gates</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <link rel="shortcut icon" href="./favicon.ico?v=4" /> <!-- http://stackoverflow.com/questions/2208933/how-do-i-force-a-favicon-refresh -->
         <link rel="stylesheet" type="text/css" href="localcss.css" />
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
         <script type='text/javascript' src='http://cdnjs.cloudflare.com/ajax/libs/knockout/2.3.0/knockout-min.js'></script>
-        <script type='text/javascript' src='ZeroClipboard.min.js'></script>
         <link rel="stylesheet" href="gh-fork-ribbon.css" />
-        <script type='text/javascript' src='birthdate.js'></script>
+        <script type='text/javascript' src='gates.js'></script>
         <script type='text/javascript' src='dismiss.js'></script>
     </head>
     <body>
         <div class="github-fork-ribbon-wrapper right">
             <div class="github-fork-ribbon">
-                <a href="https://github.com/emrys57/birthdate">Fork me on GitHub</a>
+                <a href="https://github.com/emrys57/gates">Fork me on GitHub</a>
             </div>
         </div>
         <div class="mainDisplay">
-            <h1>Birthdate and Age Calculator</h1>
+            <h1>Rising Gate Calculator</h1>
             <div class="lesser">
-                Calculate possible date of birth from the age given in historical documents, census and birth registration, for genealogy and family history research.
-                Census dates, birth registration rules and the calendar are currently set up for the UK.
+                How to hang a rising gate, neatly!
+                <br />
+                Calculate the offset of one hinge of a gate to make it rise on opening, yet be vertical both when closed and when open.
+                <br />
+                Much more information <a href="http://www.eversholt.org.uk/blog/?cat=4">here</a>.
             </div>
         </div>
         <div class="mainDisplay">
-            <div class="parmTitle">Calculation: </div>
-            <div class="ib column" >
-                <select data-bind="options: calculators, optionsText: 'dropDownText', optionsValue: 'codedValue', value: calculation" >
-                </select>
-            </div>
-            <div data-bind="if: calculation()=='bfaaukc'">
-                <div class="parmTitle">Census Year:</div> 
-                <div class="ib" >
-                    <select data-bind="options: ukCensusYears, value:ukCensusYear">
-                    </select>
+            <div data-bind="foreach: inParms">
+                <div data-bind="template: 'showParm'">
                 </div>
-            </div>      
+            </div>
         </div>
         <div class="mainDisplay">
-            <div data-bind="if: calculation() != 'bfbrq'">
-                <div class="parmTitle"></div>
-                <div class="ib column" >Years</div>
-                <div class="ib column" >Months</div>
-                <div class="ib column" >Weeks</div>
-                <div class="ib column" >Days</div>
-                <br />
-                <div class="parmTitle">
-                    Age:
+            <div data-bind="foreach: outParms">
+                <div data-bind="template: 'showParm'">
                 </div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: ageYears, valueUpdate: 'afterkeydown', css: { invalid: !ageYValid() }"/></div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: ageMonths, valueUpdate: 'afterkeydown', css: { invalid: !ageMValid() }"/></div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: ageWeeks, valueUpdate: 'afterkeydown', css: { invalid: !ageWValid() }"/></div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: ageDays, valueUpdate: 'afterkeydown', css: { invalid: !ageDValid() }"/></div>
-                <br />
             </div>
-            <div data-bind="if: calculation() == 'bfaaukc'">
-                <div class="parmTitle">On Census Day</div>
-                <div class="ib" data-bind="text:displayedUKCensusDate"></div>
-            </div>
-            <div data-bind="if: calculation() == 'bfbrq'">
-                <div class="parmTitle"></div>
-                <div class="ib column" >Year</div>
-                <div class="ib" data-bind="if: registrationMonthly"><div class="ib column" >Month</div></div>
-                <div class="ib" data-bind="if: !registrationMonthly()"><div class="ib column" >Quarter</div></div>
-                <div></div>
-                <div class="parmTitle">Birth Registration</div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: onDate1Year, valueUpdate: 'afterkeydown', css: { invalid: !onDate1YSet() }"></div>
-                <div class="ib column" >
-                    <select data-bind="options: briUnits, optionsText: 'dropDownText', value: briUnit" >
-                    </select>
-                </div>
-                <br /><br />
-            </div>
-            <div data-bind="if: calculation() == 'bfaod'">
-                <div class="parmTitle"></div>
-                <div class="ib column" >Year</div>
-                <div class="ib column" >Month</div>
-                <div class="ib column" >Day</div>
-                <br />
-                <div class="parmTitle">
-                    On date:
-                </div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: onDate1Year, valueUpdate: 'afterkeydown', css: { invalid: !onDate1YSet() }"></div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: onDate1Month, valueUpdate: 'afterkeydown', css: { invalid: !onDate1MValid()}"></div>
-                <div class="ib column" ><input type="text" class="columnInput" data-bind="value: onDate1Day, valueUpdate: 'afterkeydown', css: { invalid: !onDate1DValid()}"></div>
-                <div class="ib" data-bind="if: onDate1ShowJulian">
-                    <div class="ib column"></div>
-                    <div class="ib column"></div>
-                    <div class="ib column julianWarning">Julian</div>
-                </div>
-                <br />
-                <!--            <br />
-                            <div class="parmTitle">onDate1Min:</div>
-                            <div class="ib column" data-bind="text: onDate1YMin"></div>
-                            <div class="ib column" data-bind="text: onDate1MMin"></div>
-                            <div class="ib column" data-bind="text: onDate1DMin"></div>
-                            <div class="ib column" data-bind="text: onDate1DayMin"></div>
-                            <br /><div class="parmTitle">onDate1Max:</div>
-                            <div class="ib column" data-bind="text: onDate1YMax"></div>
-                            <div class="ib column" data-bind="text: onDate1MMax"></div>
-                            <div class="ib column" data-bind="text: onDate1DMax"></div>
-                            <div class="ib column" data-bind="text: onDate1DayMax"></div>
-                            <br />-->
+        </div>
 
-                <div class="parmTitle"></div>
-                <div class="redAlert" data-bind="if: birthdateInvalid">Invalid!</div>
-                <br />
-            </div>
-            <div data-bind="if: birthdateWanted">
-                <div class="parmTitle">Birth Earliest:</div>
-                <div class="ib" data-bind="if: displayDefined">
-                    <div class="ib column" data-bind="text: earliestBirthdate().getFullYear()"></div>
-                    <div class="ib column" data-bind="text: earliestBirthdate().getMonth()+1"></div>
-                    <div class="ib column" data-bind="text: earliestBirthdate().getDate()"></div>
-                    <div class="ib column" data-bind="text: M$.dayFromDate(earliestBirthdate())"></div>
-                    <div class="ib column" data-bind="text: '00:00'"></div>
-                    <div class="ib" data-bind="if: earliestBirthdateJulian">
-                        <div class="ib column julianWarning">Julian</div>
-                    </div>
-                </div>
-                <div class="ib" data-bind="if: earliestBirthdateTooEarly">
-                    <div class="ib julianWarning">Sorry! Too long ago.</div>
-                </div>
-                <div class="redAlert" data-bind="if: birthdateImpossible">Impossible!!</div>
-                <br /><div class="parmTitle">Birth Latest:</div>
-                <div class="ib" data-bind="if: displayDefined">
-                    <div class="ib column" data-bind="text: latestBirthdate().getFullYear()"></div>
-                    <div class="ib column" data-bind="text: latestBirthdate().getMonth()+1"></div>
-                    <div class="ib column" data-bind="text: latestBirthdate().getDate()"></div>
-                    <div class="ib column" data-bind="text: M$.dayFromDate(latestBirthdate())"></div>
-                    <div class="ib column" data-bind="text: '23:59'"></div>
-                    <div class="ib" data-bind="if: latestBirthdateJulian">
-                        <div class="ib column julianWarning">Julian</div>
-                    </div>
-                </div>
-                <br />
-                <div data-bind="if: customBirthdates">
-                    <div class="drLabel">Birth:</div>
-                    <input type="submit" class="smallButton copyButton" value="Copy" id="copy-button" data-clipboard-target="drDateValue" data-bind="css: {displayNone: !copyPossible(), greyed: !displayDefined()}"/>
-                    <div class="drValue" id="drDateValue" data-bind="html: customBirthdateReadout"></div>
-                    <div></div>
-                    <!--             <div data-bind="text: customBirthdateReadout"></div> -->
-                </div>
-            </div>
-        </div>
-        <!--        <div class="mainDisplay" >
-                    <div data-bind="with: units">
-                        <div data-bind="template: 'units'"></div>
-                    </div>
-                    <div data-bind="with: diff">
-                        <div data-bind="template: 'diff'"></div>
-                    </div>
-                    <div data-bind="foreach: dates">
-                        <div data-bind="template: 'oneDate'">
-                        </div>
-                    </div>
-                </div>-->
-        <div class="mainDisplay">
-            <input title='Create a URL you can bookmark with these options' data-bind="click: saveButtonPressed, clickBubble: false" type='submit' id='saveButton2' class='smallButton' style="width: 10em;" value='Save Options' />
-            <input title='Adjust the display in detail' data-bind="click: settingsButtonPressed, value: settingsOpen()? 'Close Settings': 'Settings'" type='submit' id='settingsButton' class='smallButton' style="width: 10em; margin-left: 3em;"  />
-            <!--<div class="linkzHelpButton" style="margin-left: 10px;" id="saveButtonHelp"></div>-->
-
-            <div style="float: right; display: inline-block;"><a href="http://www.eversholt.org.uk/blog/?cat=3">Much more info here!</a></div>
-            <div></div>
-            <div style="display: inline-block; position: absolute; margin-top: 0.5em;">
-                <div id="saveButtonConfirm" class="dismissOnClick" style="display: none;  margin-top: -7px; ">
-                    <div class="ePanel" style="width: auto; margin-left: 1em; z-index: 10; position: relative;"> The options have been saved in the URL for bookmarking and copying.</div>
-                </div>
-            </div>
-            <div data-bind="slideContent: settingsOpen" class="settings">
-                <div class="content" style="display: none;">
-                    <div data-bind="slideContent2: customBirthdates" style="display: none">
-                        <div class="lesser" data-bind="if: isFirefox">Sorry! Firefox seems to struggle with editing the custom fields below. Chrome and Safari work fine. Keep going, it <i>is</i> possible!</div>
-                        <div >
-                            <h3>Custom date format:</h3>
-                            Touch to insert:
-                            <input title='4-digit year' data-bind="click: function() { insertDatePressed('yyyy');}" type='submit' class='smallButton' style="width: 6em;" value='YYYY' />
-                            <input title='month 01-12' data-bind="click: function() { insertDatePressed('mm');}" type='submit' class='smallButton' style="width: 6em;" value='MM' />
-                            <input title='Month Jan-Dec' data-bind="click: function() { insertDatePressed('mmm');}" type='submit' class='smallButton' style="width: 6em;" value='MMM' />
-                            <input title='Month January-December' data-bind="click: function() { insertDatePressed('mmmm');}" type='submit' class='smallButton' style="width: 6em;" value='MMMM' />
-                            <input title='Day of month 01-31' data-bind="click: function() { insertDatePressed('dd');}" type='submit' class='smallButton' style="width: 6em;" value='DD' />
-                            <input title='Day of Week Mon-Sun' data-bind="click: function() { insertDatePressed('ddd');}" type='submit' class='smallButton' style="width: 6em;" value='DDD' />
-                            <input title='Day of week Monday-Sunday' data-bind="click: function() { insertDatePressed('day');}" type='submit' class='smallButton' style="width: 6em;" value='day' />
-                            or type any text you want.
-                            <div></div>
-                            <div contenteditable="true" class="editable" id="customDateDefinition" data-bind="htmlValue: dateText"></div>
-                        </div>
-                        <div >
-                            <h3>Custom between-dates format:</h3>
-                            Touch to insert:
-                            <input title='Insert Earliest Birthdate into custom display' data-bind="click: function() { insertPressed('earliest');}" type='submit' class='smallButton' style="width: 10em;" value='Earliest Birthdate' />
-                            <input title='Insert Latest Birthdate into custom display' data-bind="click: function() { insertPressed('latest');}" type='submit' class='smallButton' style="width: 10em;" value='Latest Birthdate' />
-                            or type any text you want.
-                            <div></div>
-                            <div contenteditable="true" class="editable" id="customBirthdateDefinition" data-bind="htmlValue: bText">Pardon?</div>
-                            <!-- <div data-bind="text: bText"></div> -->
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
 
         <div class="development" data-bind="if:developmentWanted">
             <div class="developmentBox" id="developmentBox" style="">
@@ -215,27 +49,26 @@ and open the template in the editor.
             </div>
             <div data-bind="if: showModel"><pre data-bind="text: ko.toJSON($data, null, 2)"></pre></div>
         </div>
-        <script type="text/html" id="oneDate">
-            <div class="parmTitle" data-bind="html: name"></div>
-            <div class="ib column" ><input type="text" class="columnInput" data-bind="value: y, valueUpdate: 'afterkeydown'"/></div>
-            <div class="ib column" ><input type="text" class="columnInput" data-bind="value: m, valueUpdate: 'afterkeydown'"/></div>
-            <div class="ib column" ><input type="text" class="columnInput" data-bind="value: d, valueUpdate: 'afterkeydown'"/></div>
-            <div class="redAlert" data-bind="if: !valid()">Invalid!</div>
-            <div class="redAlert" data-bind="text: problems"></div>
-        </script>
-        <script type="text/html" id ="units">
-            <div class="parmTitle" data-bind="html: name"></div>
-            <div class="ib column" ><input type="checkbox" data-bind="checked: y"/>years</div>
-            <div class="ib column" ><input type="checkbox" data-bind="checked: m"/>months</div>
-            <div class="ib column" ><input type="checkbox" data-bind="checked: w"/>weeks</div>
-            <div class="ib column" ><input type="checkbox" data-bind="checked: d"/>days</div>
-        </script>
-        <script type="text/html" id ="diff">
-            <div class="parmTitle" data-bind="html: name"></div>
-            <div class="ib column" data-bind="text: d().y"></div>
-            <div class="ib column" data-bind="text: d().m"></div>
-            <div class="ib column" data-bind="text: d().w"></div>
-            <div class="ib column" data-bind="text: d().d"></div>
-        </script>
+
+<script type="text/html" id="showParm">
+    <div>
+        <div class="parmTitle"><div class="ib" data-bind="html: ko.unwrap(readable)+':'"></div> </div>
+        <div class="ib" data-bind="visible: ko.unwrap(input)"> <!-- knockout inserts spurious space using just if binding -->
+            <div class="ib column" data-bind="if: ko.unwrap(input)"> 
+                <div class="ib columnOutput">
+                <input type="text" class="columnInput" data-bind="value: $root[variableName], valueUpdate: 'afterkeydown', css: { invalid: !koValid() }"/>
+                </div>
+                <div class="ib" data-bind="html: unit"></div>
+            </div>
+        </div>
+        <div class="ib" data-bind="visible: !ko.unwrap(input)">
+            <div class="ib column" data-bind="if: !ko.unwrap(input)">
+                <div class="ib columnOutput" data-bind="text: $root.round2($root[variableName]())"></div>
+                <div class="ib" data-bind="html: unit"></div>
+            </div>
+        </div>
+        <div class="ib comment" data-bind="html: hint"></div>
+    </div>
+</script>
     </body>
 </html>

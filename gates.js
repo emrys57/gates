@@ -44,12 +44,17 @@ var M$ = (function(my) {
         self.showModel = ko.observable(false);
 //        self.oGate = ko.observable('3000');
 //        self.oUD = ko.observable('900');
-                self.inParms = ko.observableArray();
-                self.outParms = ko.observableArray();
+        self.inParms = ko.observableArray();
+        self.outParms = ko.observableArray();
         var ParmModel = function(options) {
             var model = this;
             model.initialValue = '';
             model.input = false;
+            model.more = false;
+            model.showMore = ko.observable(false);
+            model.moreClicked = function() {
+                model.showMore(!model.showMore());
+            };
             $.extend(model, options); // just pile all the variables into this model
             if (model.input) { // then we want to create variables 
                 self[options.variableName] = ko.observable(model.initialValue); // create a function at the root model level
@@ -59,10 +64,26 @@ var M$ = (function(my) {
                 self[options.variableName + 'Valid'] = model.koValid;
             }
         };
-        self.inParms.push(new ParmModel({variableName: 'oGate', initialValue: 3000, readable: 'O<sub>GATE</sub>', input: true, unit: 'mm', hint: 'Width, top hinge pin to outside of gate', valid: function(a) {var b = parseFloat(a); return (b>=1) && (b<=999999);}}));
-        self.inParms.push(new ParmModel({variableName: 'oUD', initialValue: 900, readable: 'O<sub>UD</sub>', input: true, unit: 'mm', hint: 'Pitch between hinges', valid: function(a) {var b = parseFloat(a); return (b>=1) && (b<=999999);}}));
-        self.inParms.push(new ParmModel({variableName: 'rise', initialValue: 150, readable: 'Rise', input: true, unit: 'mm', hint: 'Rise required at outside of gate when fully open', valid: function(a) {var b = parseFloat(a); return (b>=-self.oGate()) && (b<=self.oGate());}}));
-        self.inParms.push(new ParmModel({variableName: 'beta', initialValue: 120, readable: 'β', input: true, unit: 'degrees', hint: 'Angle from closed gate to fully open gate', valid: function(a) {var b = parseFloat(a); return (b>=-360) && (b<=360);}}));
+        self.inParms.push(new ParmModel({variableName: 'oGate', initialValue: 3000, readable: 'O<sub>GATE</sub>', input: true, unit: 'mm',
+            hint: 'Width, top hinge pin to outside of gate',
+            more: '<img src="./gate8.png" style="width: 100%" />',
+            valid: function(a) {
+                var b = parseFloat(a);
+                return (b >= 1) && (b <= 999999);
+            }}));
+        self.inParms.push(new ParmModel({variableName: 'oUD', initialValue: 900, readable: 'O<sub>UD</sub>', input: true, unit: 'mm', hint: 'Pitch between hinges',
+            more: '<img src="./gate9.png" style="width: 40%" />', valid: function(a) {
+                var b = parseFloat(a);
+                return (b >= 1) && (b <= 999999);
+            }}));
+        self.inParms.push(new ParmModel({variableName: 'rise', initialValue: 150, readable: 'Rise', input: true, unit: 'mm', hint: 'Rise required at outside of gate when fully open', more: '<img src="./gate12.png" style="width: 100%" />', valid: function(a) {
+                var b = parseFloat(a);
+                return (b >= -self.oGate()) && (b <= self.oGate());
+            }}));
+        self.inParms.push(new ParmModel({variableName: 'beta', initialValue: 120, readable: 'β', input: true, unit: 'degrees', hint: 'Angle from closed gate to fully open gate', more: '<img src="./gate13.png" style="width: 100%" />', valid: function(a) {
+                var b = parseFloat(a);
+                return (b >= -360) && (b <= 360);
+            }}));
 
 
         function goneTooFar(effectiveRise, rise, delta) {
@@ -103,11 +124,63 @@ var M$ = (function(my) {
             return my.degreesFromRadians(Math.atan2(self.oWE(), self.oUD()));
         });
 
-        self.outParms.push(new ParmModel({variableName: 'oNS', unit: 'mm', readable: 'O<sub>NS</sub>', hint: 'Lower hinge offset in plane of gate'}));
-        self.outParms.push(new ParmModel({variableName: 'oWE', unit: 'mm', readable: 'O<sub>WE</sub>', hint: 'Lower hinge outset perpendicular to gate'}));
-        self.outParms.push(new ParmModel({variableName: 'theta', unit: 'degrees', readable: 'θ', hint: 'Angle of hinges in plane of gate'}));
-        self.outParms.push(new ParmModel({variableName: 'φ', unit: 'degrees', readable: 'φ', hint: 'Angle of hinges perpendicular to gate'}));
-      
+        self.outParms.push(new ParmModel({variableName: 'oNS', unit: 'mm', readable: 'O<sub>NS</sub>', hint: 'Lower hinge offset in plane of gate', more: '<img src="./gate10.png" style="width: 40%" />'}));
+        self.outParms.push(new ParmModel({variableName: 'oWE', unit: 'mm', readable: 'O<sub>WE</sub>', hint: 'Lower hinge outset perpendicular to gate', more: '<img src="./gate11.png" style="width: 40%" />'}));
+        self.outParms.push(new ParmModel({variableName: 'theta', unit: 'degrees', readable: 'θ', hint: 'Angle of hinges in plane of gate', more: '<img src="./gate14.png" style="width: 40%" /><div class="ib comment" style="vertical-align: top; padding: 1em; width: 55%;">The hinges should be rotated to this angle looking straight at the gate.<br />For loose-fitting hinges, often this does not matter.</div>'}));
+        self.outParms.push(new ParmModel({variableName: 'φ', unit: 'degrees', readable: 'φ', hint: 'Angle of hinges perpendicular to gate', more: '<img src="./gate15.png" style="width: 40%" /><div class="ib comment" style="vertical-align: top; padding: 1em; width: 55%;">The hinges should be rotated to this angle looking along the gate.<br />For loose-fitting hinges, often this does not matter.</div>'}));
+
+        self.sayings = ko.observableArray();
+        // http://forum.canadianwoodworking.com/showthread.php?29910-Woodworking-Sayings
+        self.sayings.push('Measure twice, cut once.');
+        self.sayings.push('Measure twice, cut once, use filler for the gaps.');
+        self.sayings.push('Measure twice, cut once, buy extra just in case.');
+        self.sayings.push('I can only make one person happy at a time.<br />Today is not your day.<br />Tomorrow isn\'t looking too good either.',
+            'There are 4 ways to make a piece of lumber into a wood object.<ul><li>The right way</li><li>The wrong way</li><li>The expert\'s way</li><li>My way.</li></ul>',
+            'The things I make may be for others, but how I make them is for me.',
+            'A Craftsman is a woodworker who has learned how to hide his mistakes.',
+            'I cut it again, and it\'s still too short!',
+            'Congratulations, you\'ve just figured out the most complicated way to hold a board 3 feet off the ground.',
+            'Caution! This machine has no brain. Use your own.',
+            'Measure three times. Take the average. Then get someone else to cut it.',
+            'An expert at anything was once a beginner.',
+            'Don\'t worry .... the trim will hide it',
+            'it\'s not a mistake, it\'s a design feature',
+            'People love chopping wood. In this activity one immediately sees results.', // http://thinkexist.com/quotes/with/keyword/wood/
+            'He who dies with the most tools wins.',
+            'The life so short, the trade so long to learn...',
+            'Anyone who thinks money doesn\'t grow on trees hasn\'t bought any wood lately.',
+            'Woodworking; a wonderful way to turn fine timber into offcuts, kindling and sawdust.',
+            'My tool is bigger than yours.',
+            'By All means read what the experts have to say. Just don’t let it get in the way of your woodworking.', // http://www.popularwoodworking.com/woodworking-blogs/editors-blog/woodworking-quotations-quips-aphorisms-and-more
+            'First, sharpen all your tools.',
+            'The pioneers cleared the forests from Jamestown to the Mississippi with fewer tools than are stored in the modern garage.',
+            'The carpenter is not the best who makes more chips than all the rest.',
+            'The finest tool ever created is the human hand, but it is weak and it is fallible.',
+            'Everything with a power cord eventually winds up in the trash.'
+            );
+        var oldSaying = '';
+        self.counter = ko.observable(0);
+        self.saying = ko.computed(function() {
+            var j = self.counter();
+            if (j == -1)
+                return 'The strangest things can happen when you least expect them';
+            // http://stackoverflow.com/questions/1527803/generating-random-numbers-in-javascript-in-a-specific-range
+            // but that does generate the max number, despite what the answer says.
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            var saying;
+            var max1 = self.sayings().length - 1;
+            var n;
+            do {
+                n = getRandomInt(0, max1);
+                saying = self.sayings()[n];
+            } while (saying == oldSaying);
+            oldSaying = saying;
+            console.log("saying: ", n, saying, max1);
+            return saying;
+        });
+        self.sayingButtonPressed = function(){ self.counter(self.counter()+1);};
     };
 
     return my;

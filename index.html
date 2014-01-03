@@ -39,6 +39,16 @@
                 </div>
             </div>
         </div>
+        
+        <div class="mainDisplay">
+            Good Luck! Have Fun!
+            <div>
+                <div class="ib comment" data-bind="html: saying"></div>
+                <div style="float: right">
+            <input class="smallButton" style="width: 5em;" type="submit" value="More" data-bind="click: sayingButtonPressed" />
+        </div>
+            </div>
+        </div>
 
 
         <div class="development" data-bind="if:developmentWanted">
@@ -53,7 +63,7 @@
 <script type="text/html" id="showParm">
     <div>
         <div class="parmTitle"><div class="ib" data-bind="html: ko.unwrap(readable)+':'"></div> </div>
-        <div class="ib" data-bind="visible: ko.unwrap(input)"> <!-- knockout inserts spurious space using just if binding -->
+        <div class="ib" data-bind="visible: ko.unwrap(input)">  <!-- knockout inserts spurious space using just if binding -->
             <div class="ib column" data-bind="if: ko.unwrap(input)"> 
                 <div class="ib columnOutput">
                 <input type="text" class="columnInput" data-bind="value: $root[variableName], valueUpdate: 'afterkeydown', css: { invalid: !koValid() }"/>
@@ -67,7 +77,15 @@
                 <div class="ib" data-bind="html: unit"></div>
             </div>
         </div>
-        <div class="ib comment" data-bind="html: hint"></div>
+        <div class="ib" >
+            <div class="ib comment" data-bind="html: hint"></div>
+        </div>
+        <div style="float: right" data-bind="if: more">
+            <input class="smallButton" style="width: 5em;" type="submit" data-bind="value: showMore()? 'Less': 'More', click: moreClicked" />
+        </div>
+        <div data-bind="slideContent2: showMore">
+            <div data-bind="html: more"></div>
+        </div>
     </div>
 </script>
     </body>

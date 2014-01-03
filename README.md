@@ -4,7 +4,7 @@ gates
 Rising Gate Calculator
 
 This repository contains the source of the [Rising Gate Calculator](http://www.eversholt.org.uk/gates). 
-The calculator has the advantage that it provides designs for the hinges of rising gates taht allow the gate to sit vertical
+The calculator has the advantage that it provides designs for the hinges of rising gates that allow the gate to sit vertical
 in both the closed and the fully open positions. As far as I know, this is unique on the web. 
 Please let me know if there's another instance.
 

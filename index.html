@@ -73,7 +73,7 @@
         </div>
         <div class="ib" data-bind="visible: !ko.unwrap(input)">
             <div class="ib column" data-bind="if: !ko.unwrap(input)">
-                <div class="ib columnOutput" data-bind="text: $root.round2($root[variableName]())"></div>
+                <div class="ib columnOutput" data-bind="text: $root.inParmsValid()? $root.round2($root[variableName]()): ''"></div>
                 <div class="ib" data-bind="html: unit"></div>
             </div>
         </div>

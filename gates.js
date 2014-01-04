@@ -84,6 +84,12 @@ var M$ = (function(my) {
                 var b = parseFloat(a);
                 return (b >= -360) && (b <= 360);
             }}));
+        self.inParmsValid = ko.computed(function(){
+            for (var i = 0; i < self.inParms().length; i++)
+                if (!self.inParms()[i].koValid())
+                    return false;
+            return true;
+        });
 
 
         function goneTooFar(effectiveRise, rise, delta) {
@@ -92,21 +98,50 @@ var M$ = (function(my) {
             return effectiveRise < rise;
         }
         ;
-        self.oNS = ko.computed(function() {
+        // this was the original numeric solver. It works but converges slowly.
+//        self.oNS = ko.computed(function() {
+//            var oUD = parseFloat(self.oUD());
+//            var oGate = parseFloat(self.oGate());
+//            var rise = parseFloat(self.rise());
+//            var deltaONS = (rise >= 0) ? 1 : -1;
+//            var oNS = -deltaONS;
+//            var errorNS = 999999;
+//            do {
+//                oNS += deltaONS;
+//                var effectiveRise = (oGate + oNS) * Math.sin(2 * Math.atan2(oNS, oUD));
+//                errorNS = effectiveRise - rise;
+//                if (goneTooFar(effectiveRise, rise, deltaONS))
+//                    deltaONS /= -10;
+//                console.log('ons:', effectiveRise, rise, deltaONS);
+//            } while (Math.abs(errorNS) > 0.000001);
+//            return oNS;
+//        });
+    // This is a faster-converging solver, because the earlier one was spiritually unsatisfying, although adequate.
+    // Because the problem is very well-behaved, this seems likely always to converge.
+    // It converges to 1 part in 1e12 within 5 loops!
+        self.oNS = ko.computed(function(){
             var oUD = parseFloat(self.oUD());
             var oGate = parseFloat(self.oGate());
             var rise = parseFloat(self.rise());
-            var deltaONS = (rise >= 0) ? 1 : -1;
-            var oNS = -deltaONS;
-            var errorNS = 999999;
+            if (rise == 0) // or we get NaN in the loop below
+                return 0;
+            var dRiseByDONS = 1; // pure guess
+            var oNS = 0;
+            var effectiveRise = (oGate + oNS) * Math.sin(2 * Math.atan2(oNS, oUD));
+            var previousEffectiveRise;
+            var previousONS;
+            var error = effectiveRise - rise;
+            var dONS;
             do {
-                oNS += deltaONS;
-                var effectiveRise = (oGate + oNS) * Math.sin(2 * Math.atan2(oNS, oUD));
-                errorNS = effectiveRise - rise;
-                if (goneTooFar(effectiveRise, rise, deltaONS))
-                    deltaONS /= -10;
-                console.log('ons:', effectiveRise, rise, deltaONS);
-            } while (Math.abs(errorNS) > 0.000001);
+                previousONS = oNS;
+                previousEffectiveRise = effectiveRise;
+                dONS = - error / dRiseByDONS;
+                oNS += dONS;
+                effectiveRise = (oGate + oNS) * Math.sin(2 * Math.atan2(oNS, oUD));
+                error = effectiveRise - rise;
+                dRiseByDONS = (effectiveRise - previousEffectiveRise) / dONS;
+                console.log('oNS2:', oNS, effectiveRise, dONS, error, dRiseByDONS);
+            } while (Math.abs(error) > .0000001);
             return oNS;
         });
         self.oWE = ko.computed(function() {
@@ -131,10 +166,10 @@ var M$ = (function(my) {
 
         self.sayings = ko.observableArray();
         // http://forum.canadianwoodworking.com/showthread.php?29910-Woodworking-Sayings
-        self.sayings.push('Measure twice, cut once.');
-        self.sayings.push('Measure twice, cut once, use filler for the gaps.');
-        self.sayings.push('Measure twice, cut once, buy extra just in case.');
-        self.sayings.push('I can only make one person happy at a time.<br />Today is not your day.<br />Tomorrow isn\'t looking too good either.',
+        self.sayings.push('Measure twice, cut once.',
+            'Measure twice, cut once, use filler for the gaps.',
+            'Measure twice, cut once, buy extra just in case.',
+            'I can only make one person happy at a time.<br />Today is not your day.<br />Tomorrow isn\'t looking too good either.',
             'There are 4 ways to make a piece of lumber into a wood object.<ul><li>The right way</li><li>The wrong way</li><li>The expert\'s way</li><li>My way.</li></ul>',
             'The things I make may be for others, but how I make them is for me.',
             'A Craftsman is a woodworker who has learned how to hide his mistakes.',
@@ -177,7 +212,7 @@ var M$ = (function(my) {
                 saying = self.sayings()[n];
             } while (saying == oldSaying);
             oldSaying = saying;
-            console.log("saying: ", n, saying, max1);
+//            console.log("saying: ", n, saying, max1);
             return saying;
         });
         self.sayingButtonPressed = function(){ self.counter(self.counter()+1);};
